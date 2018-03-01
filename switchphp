@@ -1,0 +1,28 @@
+#!/bin/bash
+echo '';
+if [ -z "$1" ];
+then
+    echo "$(tput setaf 1)ERROR: There is some errors in script executing:$(tput sgr 0)";
+    echo "$(tput setaf 3)PLEASE SPECIFY THE SWITCHING VERSION$(tput sgr 0)";
+    echo "$(tput setaf 3)for example: 'switchphp 7.2'$(tput sgr 0)";
+else
+    echo "$(tput setaf 4)YOU CHOOSE PHP'$1'$(tput sgr 0)";
+    echo "Start switching PHP to'$1' process...";
+    echo '';
+    echo "Switching Apache2 to use PHP'$1'...";
+    sudo a2dismod -q php5.6 php7.0 php7.1 php7.2 2> /dev/null;
+    echo "Restarting apache2...";
+    sudo service apache2 restart;
+    echo "Restarting apache2...[$(tput setaf 2)OK$(tput sgr 0)]";
+    sudo a2enmod php${1};
+    echo '';
+    echo "Switching Apache2 to use PHP'$1'...[$(tput setaf 2)OK$(tput sgr 0)]";
+    echo "Switching PHP to version'$1'...";
+    sudo update-alternatives --set php /usr/bin/php${1} 2> /dev/null;
+    echo "Switching PHP to version'$1'...[$(tput setaf 2)OK$(tput sgr 0)]";
+    echo '';
+    echo "Restarting apache2...";
+    sudo service apache2 restart;
+    echo "Restarting apache2...[$(tput setaf 2)OK$(tput sgr 0)]";
+    echo "$(tput setaf 2)SUCCESFULLY SWITCHED PHP TO VERSION '$1'.$(tput sgr 0)";
+fi
